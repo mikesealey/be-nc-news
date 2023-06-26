@@ -18,20 +18,19 @@ describe('GET/api/topics', () => {
         .get("/api/topics")
         .expect(200)
         .then(({ body }) => {
+            expect(body.topics.length).toEqual(3)
             body.topics.forEach(topicObject => {
                 expect(topicObject).toHaveProperty("slug")
                 expect(topicObject).toHaveProperty("description")
             })
         } )
     })
+
     it("Should respond with an appropriate error", () => {
         return request(app)
         .get("/api/nonexistantendpoint")
         .expect(404)
         .then((response) => {
-            console.log(response)
-            console.log(response.body.msg)
-            // console.log(response.statusCode)
             expect(response.body.msg).toBe("Not found")
         })
     })

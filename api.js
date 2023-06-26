@@ -5,7 +5,7 @@ const app = express()
 app.use(express.json())
 
 app.get("/api/topics", getTopics)
-//app.get("/api", getApi)
+
 
 
 // Catch-all error handling - Must occur last
