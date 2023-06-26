@@ -1,3 +1,7 @@
 # Northcoders News API
 
-For instructions, please head over to [L2C NC News](https://l2c.northcoders.com/courses/be/nc-news).
+INSTRUCTIONS
+- When cloning this project to run locally
+
+- create a file called .env.<file_name_here>
+- inside .env.<filenamehere> specifyPGDATABASE=<database_name_here>
