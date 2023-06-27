@@ -105,7 +105,7 @@ describe("GET/api/articles/:article_id", () => {
             expect(body.msg).toBe("Not found")
         })
     })
-    it.only("400 - Bad request", () => {
+    it("400 - Bad request", () => {
         return request(app)
         .get("/api/articles/stephen")
         .expect(400)
