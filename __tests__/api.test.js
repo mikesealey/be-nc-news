@@ -3,6 +3,8 @@ const app = require("../api")
 const db = require("../db/connection")
 const seed = require('../db/seeds/seed')
 const testData = require('../db/data/test-data')
+
+
 //const expectExport = require("expect")
 
 
@@ -64,7 +66,7 @@ describe('GET/api/', () => {
     })
 })
 
-describe.only("GET/api/articles/:article_id", () => {
+describe("GET/api/articles/:article_id", () => {
     it("Should return an object of one article", () => {
         return request(app)
         .get("/api/articles/1")
@@ -101,6 +103,15 @@ describe.only("GET/api/articles/:article_id", () => {
         .expect(404)
         .then(({body}) => {
             expect(body.msg).toBe("Not found")
+        })
+    })
+    it.only("400 - Bad request", () => {
+        return request(app)
+        .get("/api/articles/stephen")
+        .expect(400)
+        .then(({body}) => {
+            console.log(body)
+            expect(body.msg).toBe("Bad Request")
         })
     })
 })

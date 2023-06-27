@@ -35,10 +35,19 @@ exports.selectApiEndPoints = () => {
 }
 
 exports.selectArticleById = (id) => {
+    console.log(id)
+
+
     return db.query(`SELECT * FROM articles WHERE article_id = $1`, [id])
     .then(({rows}) => {
-
-        return rows
+        console.log(">>>>>>>>>>>",rows)
+        if (rows.length === 0) {
+            return Promise.reject({status: 404, msg: "Not found"})
+        } else {
+            console.log(rows)
+            return rows[0]
+        }
+        
     })
 }
 
