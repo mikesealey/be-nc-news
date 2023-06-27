@@ -1,4 +1,5 @@
-const { selectAllTopics, selectApiEndPoints } = require("../models/api.models")
+const { selectAllTopics, selectApiEndPoints, selectArticleById } = require("../models/api.models")
+
 
 const getTopics = (req, res, next) => {
     selectAllTopics(req.query)
@@ -10,11 +11,28 @@ const getTopics = (req, res, next) => {
 const getApiEndpoints = (req, res) => {
     selectApiEndPoints(req.query)
     .then((endpoints) => {
-        console.log(endpoints)
         res.status(200).send({endpoints})
     })
 }
 
+const getArticleById = (req, res) => {
+    let id = req.params.article_id
+    selectArticleById(id)
+    .then((rows) => {
+        if (rows.length === 0) {
+            res.status(404).send({msg: "Not found"})
+        } else {
+            res.status(200).send(rows[0])
+        }
+    })
 
 
-module.exports = { getTopics, getApiEndpoints}
+
+
+    
+}
+
+
+
+
+module.exports = { getTopics, getApiEndpoints, getArticleById }

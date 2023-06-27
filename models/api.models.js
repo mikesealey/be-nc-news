@@ -1,5 +1,6 @@
 const db = require("../db/connection")
 const fs = require("fs/promises")
+const { checkExists } = require("./checkExists.models")
 
 exports.selectAllTopics = () => {
     let queryString = `
@@ -29,8 +30,15 @@ exports.selectApiEndPoints = () => {
                 exampleResponse: fileContents[key].exampleResponse
             }
         })
-        console.log(apiEndpoints)
         return apiEndpoints
+    })
+}
+
+exports.selectArticleById = (id) => {
+    return db.query(`SELECT * FROM articles WHERE article_id = $1`, [id])
+    .then(({rows}) => {
+
+        return rows
     })
 }
 
