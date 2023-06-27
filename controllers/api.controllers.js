@@ -19,7 +19,6 @@ const getArticleById = (req, res, next) => {
     let id = req.params.article_id
     selectArticleById(id)
     .then((rows) => {
-            console.log(rows)
             res.status(200).send(rows)
     })
     .catch((err) => {
