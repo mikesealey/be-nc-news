@@ -40,6 +40,7 @@ exports.selectArticleById = (id) => {
         if (rows.length === 0) {
             return Promise.reject({status: 404, msg: "Not found"})
         } else {
+            console.log(rows)
             return rows[0]
         }
 
