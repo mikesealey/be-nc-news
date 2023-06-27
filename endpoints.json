@@ -1,10 +1,14 @@
 {
   "GET /api": {
-    "description": "serves up a json representation of all the available endpoints of the api"
+    "description": "serves up a json representation of all the available endpoints of the api",
+    "queries": [],
+    "format": "null",
+    "exampleResponse": "See also: recursion"
   },
   "GET /api/topics": {
     "description": "serves an array of all topics",
     "queries": [],
+    "format": "null",
     "exampleResponse": {
       "topics": [{ "slug": "football", "description": "Footie!" }]
     }
@@ -12,6 +16,7 @@
   "GET /api/articles": {
     "description": "serves an array of all topics",
     "queries": ["author", "topic", "sort_by", "order"],
+    "format": ["author=", "topic=", "sort_by"],
     "exampleResponse": {
       "articles": [
         {

@@ -1,11 +1,11 @@
 const express = require('express')
-const { getTopics, getApi } = require("./controllers/api.controllers")
+const { getTopics, getApiEndpoints } = require("./controllers/api.controllers")
 
 const app = express()
 app.use(express.json())
 
 app.get("/api/topics", getTopics)
-
+app.get("/api", getApiEndpoints)
 
 
 // Catch-all error handling - Must occur last

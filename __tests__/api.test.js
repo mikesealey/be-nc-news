@@ -3,6 +3,7 @@ const app = require("../api")
 const db = require("../db/connection")
 const seed = require('../db/seeds/seed')
 const testData = require('../db/data/test-data')
+const expectExport = require("expect")
 
 beforeEach(() => {
     return seed(testData)
@@ -35,6 +36,32 @@ describe('GET/api/topics', () => {
         })
     })
 })
+
+describe('GET/api/', () => {
+    it("Should respond with status-200 and an object", () => {
+        return request(app)
+        .get("/api/")
+        .expect(200)
+        .then(({ body }) => {
+            expect(typeof body).toBe("object")
+        } )
+    })
+    it("Should respond with an object with values", () => {
+        return request(app)
+        .get("/api/")
+        .expect(200)
+        .then(({ body }) => {
+            const apiKeys = Object.keys(body.endpoints)
+            apiKeys.forEach(key => {
+                expect(body.endpoints[key]).toHaveProperty("description")
+                expect(body.endpoints[key]).toHaveProperty("acceptedQueries")
+                expect(body.endpoints[key]).toHaveProperty("expectedFormat")
+                expect(body.endpoints[key]).toHaveProperty("exampleResponse")
+            })
+        } )
+    })
+})
+
 
 
 
