@@ -171,7 +171,7 @@ describe("GET /api/articles/:article_id/comments", () => {
             })
         })
     })
-    it.only("Should return an array of comments sorted by created_at, newest first", () => {
+    it("Should return an array of comments sorted by created_at, newest first", () => {
         return request(app)
         .get("/api/articles/1/comments")
         .expect(200)
