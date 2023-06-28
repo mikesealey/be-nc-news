@@ -1,4 +1,5 @@
-const { selectAllTopics, selectApiEndPoints, selectArticleById, selectArticles, selectArticleComments } = require("../models/api.models")
+const { selectAllTopics, selectApiEndPoints, selectArticleById, selectArticles } = require("../models/api.models")
+
 
 
 const getTopics = (req, res, next) => {
@@ -24,12 +25,5 @@ const getArticleById = (req, res, next) => {
     .catch(next)
 }
 
-const getArticles = (_, res, next) => {
-    selectArticles()
-    .then((rows) => {
-        res.status(200).send(rows)
-    })
-    .catch(next)
-}
+module.exports = { getTopics, getApiEndpoints, getArticleById, }
 
-module.exports = { getTopics, getApiEndpoints, getArticleById, getArticles, }

@@ -12,10 +12,11 @@ app.get("/api/articles", getArticles)
 app.use(customErrorHandler)
 app.use(psqlErrorHandler)
 
+
+
 // Catch-all error handling - Must occur last
 app.all("/*", function (req, res, next) { 
     res.status(404).send(({msg: "Not found"}))
 })
-
 
 module.exports = app

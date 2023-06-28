@@ -42,7 +42,6 @@ exports.selectArticleById = (id) => {
         }
         return rows
     })
-
 }
 
 exports.selectArticles = () => {
