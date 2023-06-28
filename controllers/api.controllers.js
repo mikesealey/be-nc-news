@@ -1,4 +1,4 @@
-const { selectAllTopics, selectApiEndPoints, selectArticleById, selectArticles } = require("../models/api.models")
+const { selectAllTopics, selectApiEndPoints, selectArticleById, selectArticles, selectCommentsByArticleId } = require("../models/api.models")
 
 
 
@@ -25,5 +25,21 @@ const getArticleById = (req, res, next) => {
     .catch(next)
 }
 
-module.exports = { getTopics, getApiEndpoints, getArticleById, }
+const getArticles = (req, res, next) => {
+    selectArticles()
+    .then((rows) => {
+        res.status(200).send(rows)
+    })
+}
+
+const getCommentsByArticleId = (req, res, next) => {
+    let id = req.params.article_id
+    selectCommentsByArticleId(id)
+    .then((rows) => {
+        res.status(200).send(rows)
+    })
+    .catch(next)
+}
+
+module.exports = { getTopics, getApiEndpoints, getArticleById, getArticles, getCommentsByArticleId}
 

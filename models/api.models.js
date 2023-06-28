@@ -59,3 +59,14 @@ exports.selectArticles = () => {
     })
 }
 
+exports.selectCommentsByArticleId = (id) => {
+    return db.query(`SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC;`, [id])
+    .then(({rows}) => {
+        console.log(rows)
+        if (rows.length === 0) {
+            return Promise.reject({status: 404, msg: "Not found"})
+        }
+        return rows
+    })
+}
+
