@@ -99,6 +99,14 @@ describe("GET/api/articles/:article_id", () => {
     })
     it("404 - Not found' when given an invalid article-id", () => {
         return request(app)
+        .get("/api/articles/banana")
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("Bad request")
+        })
+    })
+    it("404 - Not found' when given an invalid article-id", () => {
+        return request(app)
         .get("/api/articles/9999")
         .expect(404)
         .then(({body}) => {
@@ -116,6 +124,35 @@ describe("GET/api/articles/:article_id", () => {
     })
 })
 
-
-
+describe("GET/api/articles", () => {
+    it("Should return an array of all articles", () => {
+        return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({body}) => {
+            expect(body).not.toHaveLength(0)
+            body.forEach(element => {
+                expect(element).toHaveProperty("author")
+                expect(element).toHaveProperty("title")
+                expect(element).toHaveProperty("article_id")
+                expect(element).toHaveProperty("topic")
+                expect(element).toHaveProperty("created_at")
+                expect(element).toHaveProperty("votes")
+                expect(element).toHaveProperty("article_img_url")
+                expect(element).not.toHaveProperty("body")
+                expect(element).toHaveProperty("comment_count")
+            })
+        })
+        
+    })
+    it("Should return an array of all articles ordered by date", () => {
+        return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then(({body}) => {
+            expect(body).toBeSortedBy("created_at", {descending: true})
+        })
+        
+    })
+})
 
