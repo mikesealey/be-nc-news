@@ -37,9 +37,12 @@ exports.selectApiEndPoints = () => {
 exports.selectArticleById = (id) => {
     return db.query(`SELECT * FROM articles WHERE article_id = $1`, [id])
     .then(({rows}) => {
-
+        if (rows.length === 0) {
+            return Promise.reject({status: 404, msg: "Not found"})
+        }
         return rows
     })
+
 }
 
 exports.selectArticles = () => {
@@ -50,6 +53,10 @@ exports.selectArticles = () => {
     GROUP BY articles.article_id
     ORDER BY articles.created_at DESC;`)
     .then(({rows}) => {
+        if (rows.length === 0) {
+            res.status(404).send({msg: "Not found"})
+        }
         return rows
     })
 }
+

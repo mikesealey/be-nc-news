@@ -97,6 +97,14 @@ describe("GET/api/articles/:article_id", () => {
     })
     it("404 - Not found' when given an invalid article-id", () => {
         return request(app)
+        .get("/api/articles/banana")
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("Bad request")
+        })
+    })
+    it("404 - Not found' when given an invalid article-id", () => {
+        return request(app)
         .get("/api/articles/9999")
         .expect(404)
         .then(({body}) => {
@@ -111,6 +119,7 @@ describe("GET/api/articles", () => {
         .get("/api/articles")
         .expect(200)
         .then(({body}) => {
+            expect(body).not.toHaveLength(0)
             body.forEach(element => {
                 expect(element).toHaveProperty("author")
                 expect(element).toHaveProperty("title")
@@ -135,5 +144,4 @@ describe("GET/api/articles", () => {
         
     })
 })
-
 

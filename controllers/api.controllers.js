@@ -1,4 +1,4 @@
-const { selectAllTopics, selectApiEndPoints, selectArticleById, selectArticles } = require("../models/api.models")
+const { selectAllTopics, selectApiEndPoints, selectArticleById, selectArticles, selectArticleComments } = require("../models/api.models")
 
 
 const getTopics = (req, res, next) => {
@@ -15,31 +15,21 @@ const getApiEndpoints = (req, res) => {
     })
 }
 
-const getArticleById = (req, res) => {
+const getArticleById = (req, res, next) => {
     let id = req.params.article_id
     selectArticleById(id)
     .then((rows) => {
-        if (rows.length === 0) {
-            res.status(404).send({msg: "Not found"})
-        } else {
             res.status(200).send(rows[0])
-        }
-    })
+        })
+    .catch(next)
 }
 
-const getArticles = (_, res) => {
+const getArticles = (_, res, next) => {
     selectArticles()
     .then((rows) => {
-        if (rows.length === 0) {
-            res.status(404).send({msg: "Not found"})
-        } else {
-            //console.log(rows)
-            console.log("In the happy path controller")
-            res.status(200).send(rows)
-        }
+        res.status(200).send(rows)
     })
+    .catch(next)
 }
 
-
-
-module.exports = { getTopics, getApiEndpoints, getArticleById, getArticles }
+module.exports = { getTopics, getApiEndpoints, getArticleById, getArticles, }
