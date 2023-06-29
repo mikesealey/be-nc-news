@@ -3,8 +3,7 @@ const app = require("../api")
 const db = require("../db/connection")
 const seed = require('../db/seeds/seed')
 const testData = require('../db/data/test-data')
-
-
+//const { describe } = require("yargs")
 //const expectExport = require("expect")
 
 
@@ -119,7 +118,7 @@ describe("GET/api/articles/:article_id", () => {
         .expect(400)
         .then(({body}) => {
             console.log(body)
-            expect(body.msg).toBe("Bad Request")
+            expect(body.msg).toBe("Bad request")
         })
     })
 })
@@ -156,3 +155,48 @@ describe("GET/api/articles", () => {
     })
 })
 
+
+
+describe.only("POST /api/articles/:article_id/comments", () => {
+    it("Should post a simple comment to an article that exists", () => {
+        return request(app)
+        .post("/api/articles/2/comments")
+        .send({user_name: "butter_bridge", body: "TEST POST PLEASE IGNORE"})
+        .expect(201)
+        .then(({body}) => {
+            expect(body).toHaveProperty("article_id")
+            expect(body).toHaveProperty("author")
+            expect(body).toHaveProperty("body")
+            expect(body).toHaveProperty("comment_id")
+            expect(body).toHaveProperty("created_at")
+            expect(body).toHaveProperty("votes")
+        })
+    })
+    it("Should return an error when given an invalid article-id type", () => {
+        return request(app)
+        .post("/api/articles/banana/comments")
+        .send({user_name: "butter_bridge", body: "Everybody knows bananas can't be PRIMARY SERIAL KEYs"})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("Bad request")
+        })
+    })
+    it.skip("Should return an error when given an article_id that does not yet have an article posted to it", () => {
+        return request(app)
+        .post("/api/articles/9999/comments")
+        .send({user_name: "butter_bridge", body: "There's no article there yet, I shouldn't be able to comment on it!"})
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe("Not found")
+        })
+    })
+    it.skip("Should return a PSQL error when given an user_name that does not exist", () => {
+        return request(app)
+        .post("/api/articles/2/comments")
+        .send({user_name: "Mike", body: "There's no article there yet, I shouldn't be able to comment on it!"})
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe("Not found")
+        })
+    })
+})

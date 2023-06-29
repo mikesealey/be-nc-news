@@ -1,4 +1,4 @@
-const { selectAllTopics, selectApiEndPoints, selectArticleById, selectArticles } = require("../models/api.models")
+const { selectAllTopics, selectApiEndPoints, selectArticleById, selectArticles, sendComment } = require("../models/api.models")
 
 
 
@@ -25,5 +25,16 @@ const getArticleById = (req, res, next) => {
     .catch(next)
 }
 
-module.exports = { getTopics, getApiEndpoints, getArticleById, }
+const postComment = (req, res, next) => {
+    let articleId = req.params.article_id
+    let commentObject = req.body
+    console.log("In the controller")
+    sendComment(articleId, commentObject)
+    .then((body) => {
+        res.status(201).send(body)
+    })
+    .catch(next)
+}
+
+module.exports = { getTopics, getApiEndpoints, getArticleById, postComment}
 

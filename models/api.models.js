@@ -59,3 +59,26 @@ exports.selectArticles = () => {
     })
 }
 
+//****** */ THURSDAY MIKE
+
+/* Posting the comment works nicely, but error-handling is tricky. 
+    Need to check if the article already exists
+    Also need to check if the article_id is legit (ie not banana)
+
+    Love from 
+    Wednesday Mike
+*/
+
+exports.sendComment = (article_id, commentObject) => {
+    console.log("In the model")
+    console.log(article_id)
+    return db.query(`
+    INSERT INTO comments (body, article_id, author)
+    VALUES ($1, $2, $3)
+    RETURNING *;`, [commentObject.body, article_id, commentObject.user_name])
+    .then(({rows}) => {
+        console.log(rows)
+        return rows[0]
+    })
+    
+}

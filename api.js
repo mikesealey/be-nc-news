@@ -1,13 +1,18 @@
 const express = require('express')
-const { getTopics, getApiEndpoints, getArticleById, getArticles } = require("./controllers/api.controllers")
+const { getTopics, getApiEndpoints, getArticleById,  postComment } = require("./controllers/api.controllers")
 const { psqlErrorHandler, customErrorHandler } = require("./errors")
 
 const app = express()
+app.use(express.json())
 
 app.get("/api/topics", getTopics)
 app.get("/api", getApiEndpoints)
 app.get("/api/articles/:article_id", getArticleById)
-app.get("/api/articles", getArticles)
+
+
+
+app.post("/api/articles/:article_id/comments", postComment)
+
 
 app.use(customErrorHandler)
 app.use(psqlErrorHandler)
