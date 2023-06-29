@@ -1,7 +1,8 @@
+const { type } = require("os")
 const db = require("../db/connection")
 const fs = require("fs/promises")
-const { checkExists } = require("./checkExists.models")
 
+// Ticket2
 exports.selectAllTopics = () => {
     let queryString = `
     SELECT * FROM TOPICS;`
@@ -11,7 +12,7 @@ exports.selectAllTopics = () => {
         return rows
     })
 }
-
+// Ticket3
 exports.selectApiEndPoints = () => {
     return fs.readFile(`${__dirname}/../endpoints.json`, "utf8")
     .then(fileContents => {
@@ -33,7 +34,7 @@ exports.selectApiEndPoints = () => {
         return apiEndpoints
     })
 }
-
+// Ticket4
 exports.selectArticleById = (id) => {
     return db.query(`SELECT * FROM articles WHERE article_id = $1`, [id])
     .then(({rows}) => {
@@ -43,7 +44,7 @@ exports.selectArticleById = (id) => {
         return rows
     })
 }
-
+// Ticket5
 exports.selectArticles = () => {
     return db.query(`
     SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.article_id) AS comment_count
@@ -58,4 +59,23 @@ exports.selectArticles = () => {
         return rows
     })
 }
+// Ticket6
+exports.selectCommentsByArticleId = (id) => {
+    return db.query(`SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC;`, [id])
+    .then(({rows}) => {
+        return rows
+    })
+}
 
+// Ticket7
+exports.sendComment = (article_id, commentObject) => {
+    return db.query(`
+    INSERT INTO comments (body, article_id, author)
+    VALUES ($1, $2, $3)
+    RETURNING *;`, [commentObject.body, article_id, commentObject.user_name])
+    .then(({rows}) => {
+        console.log(rows)
+        return rows[0]
+    })
+    
+}
