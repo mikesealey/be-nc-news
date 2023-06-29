@@ -181,7 +181,7 @@ describe.only("POST /api/articles/:article_id/comments", () => {
             expect(body.msg).toBe("Bad request")
         })
     })
-    it.skip("Should return an error when given an article_id that does not yet have an article posted to it", () => {
+    it("Should return an error when given an article_id that does not yet have an article posted to it", () => {
         return request(app)
         .post("/api/articles/9999/comments")
         .send({user_name: "butter_bridge", body: "There's no article there yet, I shouldn't be able to comment on it!"})
