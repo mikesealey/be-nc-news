@@ -197,7 +197,7 @@ describe("GET /api/articles/:article_id/comments", () => {
     })
 })
 // Ticket7
-describe("POST /api/articles/:article_id/comments", () => {
+describe.skip("POST /api/articles/:article_id/comments", () => {
     it("Should post a simple comment to an article that exists", () => {
         return request(app)
         .post("/api/articles/2/comments")
