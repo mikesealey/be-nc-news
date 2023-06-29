@@ -45,6 +45,7 @@ const getCommentsByArticleId = (req, res, next) => {
 }
 // Ticket7
 const postComment = (req, res, next) => {
+    console.log("In the controller")
     let articleId = req.params.article_id
     let commentObject = req.body
     sendComment(articleId, commentObject)
