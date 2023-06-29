@@ -96,7 +96,7 @@ describe("GET/api/articles/:article_id", () => {
             expect(body).toHaveProperty("article_img_url")
         })
     })
-    it("404 - Not found' when given an invalid article-id", () => {
+    it("400 - Not found' when given an invalid article-id query", () => {
         return request(app)
         .get("/api/articles/banana")
         .expect(400)
@@ -141,7 +141,6 @@ describe("GET/api/articles", () => {
                 expect(element).toHaveProperty("comment_count")
             })
         })
-        
     })
     it("Should return an array of all articles ordered by date", () => {
         return request(app)
