@@ -197,7 +197,7 @@ describe("GET /api/articles/:article_id/comments", () => {
 })
 // Ticket7
 describe.skip("POST /api/articles/:article_id/comments", () => {
-    it("Should post a simple comment to an article that exists", () => {
+    it.only("Should post a simple comment to an article that exists", () => {
         return request(app)
         .post("/api/articles/2/comments")
         .send({user_name: "butter_bridge", body: "TEST POST PLEASE IGNORE"})

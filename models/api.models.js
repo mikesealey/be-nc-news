@@ -69,7 +69,7 @@ exports.selectCommentsByArticleId = (id) => {
 
 // Ticket7
 exports.sendComment = (article_id, commentObject) => {
-    console.log("models")
+    console.log("In the model")
     return db.query(`
     INSERT INTO comments (body, article_id, author)
     VALUES ($1, $2, $3)
