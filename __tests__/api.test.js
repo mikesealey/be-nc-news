@@ -97,7 +97,7 @@ describe("GET/api/articles/:article_id", () => {
             expect(body).toHaveProperty("article_img_url")
         })
     })
-    it("404 - Not found' when given an invalid article-id", () => {
+    it("400 - Not found' when given an invalid article-id query", () => {
         return request(app)
         .get("/api/articles/banana")
         .expect(400)
@@ -118,8 +118,7 @@ describe("GET/api/articles/:article_id", () => {
         .get("/api/articles/stephen")
         .expect(400)
         .then(({body}) => {
-            console.log(body)
-            expect(body.msg).toBe("Bad Request")
+            expect(body.msg).toBe("Bad request")
         })
     })
 })
@@ -130,7 +129,7 @@ describe("GET/api/articles", () => {
         .get("/api/articles")
         .expect(200)
         .then(({body}) => {
-            expect(body).not.toHaveLength(0)
+            expect(body).toHaveLength(13)
             body.forEach(element => {
                 expect(element).toHaveProperty("author")
                 expect(element).toHaveProperty("title")
@@ -143,7 +142,6 @@ describe("GET/api/articles", () => {
                 expect(element).toHaveProperty("comment_count")
             })
         })
-        
     })
     it("Should return an array of all articles ordered by date", () => {
         return request(app)
@@ -153,6 +151,49 @@ describe("GET/api/articles", () => {
             expect(body).toBeSortedBy("created_at", {descending: true})
         })
         
+    })
+})
+
+describe("GET /api/articles/:article_id/comments", () => {
+    it("Should return an array of comments for the given article", () => {
+        return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then(({body}) => {
+            expect(body).toHaveLength(11)
+            body.forEach(comment => {
+                expect(comment).toHaveProperty("comment_id")
+                expect(comment).toHaveProperty("votes")
+                expect(comment).toHaveProperty("created_at")
+                expect(comment).toHaveProperty("author")
+                expect(comment).toHaveProperty("body")
+                expect(comment).toHaveProperty("article_id")
+            })
+        })
+    })
+    it("Should return an array of comments sorted by created_at, newest first", () => {
+        return request(app)
+        .get("/api/articles/1/comments")
+        .expect(200)
+        .then(({body}) => {
+            expect(body).toBeSortedBy("created_at", {descending: true})
+        })
+    })
+    it("Should return 400 - Bad request when given an invalid article-id query", () => {
+        return request(app)
+        .get("/api/articles/banana/comments")
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("Bad request")
+        })
+    })
+    it("Should return 200 - empty-array when given an article-id that contains no comments", () => {
+        return request(app)
+        .get("/api/articles/2/comments")
+        .expect(200)
+        .then(({body}) => {
+            expect(body).toEqual([])
+        })
     })
 })
 

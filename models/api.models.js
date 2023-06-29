@@ -1,6 +1,6 @@
 const db = require("../db/connection")
 const fs = require("fs/promises")
-const { checkExists } = require("./checkExists.models")
+
 
 exports.selectAllTopics = () => {
     let queryString = `
@@ -55,6 +55,13 @@ exports.selectArticles = () => {
         if (rows.length === 0) {
             res.status(404).send({msg: "Not found"})
         }
+        return rows
+    })
+}
+
+exports.selectCommentsByArticleId = (id) => {
+    return db.query(`SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC;`, [id])
+    .then(({rows}) => {
         return rows
     })
 }
