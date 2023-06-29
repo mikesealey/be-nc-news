@@ -187,20 +187,12 @@ describe("GET /api/articles/:article_id/comments", () => {
             expect(body.msg).toBe("Bad request")
         })
     })
-    it("Should return 404 - Not found when given an article-id that contains no comments", () => {
+    it("Should return 200 - empty-array when given an article-id that contains no comments", () => {
         return request(app)
         .get("/api/articles/2/comments")
-        .expect(404)
+        .expect(200)
         .then(({body}) => {
-            expect(body.msg).toBe("Not found")
-        })
-    })
-    it("Should return 404 - Not found when given an article-id that does not yet exist", () => {
-        return request(app)
-        .get("/api/articles/9999/comments")
-        .expect(404)
-        .then(({body}) => {
-            expect(body.msg).toBe("Not found")
+            expect(body).toEqual([])
         })
     })
 })

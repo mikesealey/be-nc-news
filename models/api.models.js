@@ -1,6 +1,6 @@
 const db = require("../db/connection")
 const fs = require("fs/promises")
-const { checkExists } = require("./checkExists.models")
+
 
 exports.selectAllTopics = () => {
     let queryString = `
@@ -62,9 +62,6 @@ exports.selectArticles = () => {
 exports.selectCommentsByArticleId = (id) => {
     return db.query(`SELECT * FROM comments WHERE article_id = $1 ORDER BY created_at DESC;`, [id])
     .then(({rows}) => {
-        if (rows.length === 0) {
-            return Promise.reject({status: 404, msg: "Not found"})
-        }
         return rows
     })
 }
