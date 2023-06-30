@@ -69,13 +69,38 @@ exports.selectCommentsByArticleId = (id) => {
 
 // Ticket7
 exports.sendComment = (article_id, commentObject) => {
-    return db.query(`
+    return this.selectArticleById(article_id)
+    .then((rows) => {
+        if (rows.length === 0) {
+            return Promise.reject({status: 404, msg: "Not found"})
+        }
+    })
+    .then(() => {
+        if (typeof commentObject.user_name !== "string" || commentObject.user_name.length === 0) {
+            return Promise.reject({status: 400, msg: "Bad request"})
+        }
+    })
+    .then(() => {
+        if (typeof commentObject.body !== "string" || commentObject.body.length === 0) {
+            return Promise.reject({status: 400, msg: "Bad request"})
+        }
+    })
+    .then(() => {
+        return db.query(`
+        SELECT * FROM users WHERE username = $1;`, [commentObject.user_name])
+    })
+    .then(({rows}) => {
+        if (rows.length === 0) {
+            return Promise.reject({status: 404, msg: "Not found"})
+        }
+    })
+    .then(() => {
+        return db.query(`
     INSERT INTO comments (body, article_id, author)
     VALUES ($1, $2, $3)
     RETURNING *;`, [commentObject.body, article_id, commentObject.user_name])
-    .then(({rows}) => {
-        console.log(rows)
-        return rows[0]
     })
-    
+    .then(({rows}) => {
+        return rows
+    })
 }
