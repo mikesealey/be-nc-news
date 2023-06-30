@@ -69,11 +69,28 @@ exports.selectCommentsByArticleId = (id) => {
 
 // Ticket7
 exports.sendComment = (article_id, commentObject) => {
-    // Re-use the selectArticleById function to make sure the article exists
     return this.selectArticleById(article_id)
-    // If it doesn't exist, the returned rows will be empty
     .then((rows) => {
-        if (!rows) {
+        if (rows.length === 0) {
+            return Promise.reject({status: 404, msg: "Not found"})
+        }
+    })
+    .then(() => {
+        if (typeof commentObject.user_name !== "string" || commentObject.user_name.length === 0) {
+            return Promise.reject({status: 400, msg: "Bad request"})
+        }
+    })
+    .then(() => {
+        if (typeof commentObject.body !== "string" || commentObject.body.length === 0) {
+            return Promise.reject({status: 400, msg: "Bad request"})
+        }
+    })
+    .then(() => {
+        return db.query(`
+        SELECT * FROM users WHERE username = $1;`, [commentObject.user_name])
+    })
+    .then(({rows}) => {
+        if (rows.length === 0) {
             return Promise.reject({status: 404, msg: "Not found"})
         }
     })
