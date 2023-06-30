@@ -68,6 +68,7 @@ exports.selectCommentsByArticleId = (id) => {
 }
 
 // Ticket7
+// Ticket7
 exports.sendComment = (article_id, commentObject) => {
     return this.selectArticleById(article_id)
     .then((rows) => {
@@ -99,6 +100,31 @@ exports.sendComment = (article_id, commentObject) => {
     INSERT INTO comments (body, article_id, author)
     VALUES ($1, $2, $3)
     RETURNING *;`, [commentObject.body, article_id, commentObject.user_name])
+    })
+    .then(({rows}) => {
+        return rows
+    })
+}
+// Ticket 8
+exports.updateVotes = (articleId, votesObject) => {
+    return this.selectArticleById(articleId)
+    .then((rows) => {
+        if (rows.length === 0) {
+            return Promise.reject({status: 404, msg: "Not found"})
+        }
+    })
+    .then(() => {
+        if (Number.isNaN(votesObject) || !votesObject) {
+            return Promise.reject({status: 400, msg: "Bad request"})
+        }
+    })
+    .then(() => {
+        return db.query(`
+        UPDATE articles
+        SET votes = votes + $2
+        WHERE article_id = $1
+        RETURNING *;`,
+        [articleId, votesObject])
     })
     .then(({rows}) => {
         return rows
