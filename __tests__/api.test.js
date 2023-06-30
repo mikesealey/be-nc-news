@@ -6,6 +6,7 @@ const testData = require('../db/data/test-data')
 
 
 
+
 beforeEach(() => {
     return seed(testData)
 })
@@ -367,6 +368,22 @@ describe("DELETE /api/comments/:comment_id", () => {
         .expect(400)
         .then(({body}) => {
             expect(body.msg).toBe("Bad request")
+        })
+    })
+})
+// Ticket 10
+describe("GET /api/users" , ()=> {
+    it("Should respond with an array of all users", () => {
+        return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then(({body}) => {
+            expect(body).toHaveLength(4)
+            body.forEach(user => {
+                expect(user).toHaveProperty("username")
+                expect(user).toHaveProperty("name")
+                expect(user).toHaveProperty("avatar_url")
+            })
         })
     })
 })
