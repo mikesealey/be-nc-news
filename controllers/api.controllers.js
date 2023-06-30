@@ -1,4 +1,4 @@
-const { selectAllTopics, selectApiEndPoints, selectArticleById, selectArticles, selectCommentsByArticleId } = require("../models/api.models")
+const { selectAllTopics, selectApiEndPoints, selectArticleById, selectArticles, selectCommentsByArticleId, sendComment } = require("../models/api.models")
 
 
 // Ticket2
@@ -45,12 +45,13 @@ const getCommentsByArticleId = (req, res, next) => {
 }
 // Ticket7
 const postComment = (req, res, next) => {
-    console.log("In the controller")
+    // console.log("In the controller")
     let articleId = req.params.article_id
     let commentObject = req.body
     sendComment(articleId, commentObject)
     .then((body) => {
-        res.status(201).send(body)
+        console.log(body)
+        res.status(201).send(body[0])
     })
     .catch(next)
 }

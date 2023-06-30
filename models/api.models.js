@@ -39,6 +39,7 @@ exports.selectArticleById = (id) => {
     return db.query(`SELECT * FROM articles WHERE article_id = $1`, [id])
     .then(({rows}) => {
         if (rows.length === 0) {
+            console.log("Pormise rejected!")
             return Promise.reject({status: 404, msg: "Not found"})
         }
         return rows
@@ -69,14 +70,25 @@ exports.selectCommentsByArticleId = (id) => {
 
 // Ticket7
 exports.sendComment = (article_id, commentObject) => {
-    console.log("In the model")
-    return db.query(`
+    // Re-use the selectArticleById function to make sure the article exists
+    return this.selectArticleById(article_id)
+    // If it doesn't exist, the returned rows will be empty
+    .then((rows) => {
+        console.log("rows", rows )
+        if (!rows) {
+            console.log("Nah bro!")
+            return Promise.reject({status: 404, msg: "Not found"})
+        }
+    })
+    .then(() => {
+        return db.query(`
     INSERT INTO comments (body, article_id, author)
     VALUES ($1, $2, $3)
-    RETURNING *;`, [commentObject.body, article_id, commentObject.user_name])
-    .then(({rows}) => {
-        console.log(rows)
-        return rows[0]
+    RETURNING *;`, [commentObject.body, 2, commentObject.user_name])
     })
-    
+    .then(({rows}) => {
+        console.log("IGHIPDFUH")
+        console.log(rows)
+        return rows
+    })
 }

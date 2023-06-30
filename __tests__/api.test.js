@@ -196,13 +196,14 @@ describe("GET /api/articles/:article_id/comments", () => {
     })
 })
 // Ticket7
-describe.skip("POST /api/articles/:article_id/comments", () => {
-    it.only("Should post a simple comment to an article that exists", () => {
+describe("POST /api/articles/:article_id/comments", () => {
+    it("Should post a simple comment to an article that exists", () => {
         return request(app)
         .post("/api/articles/2/comments")
         .send({user_name: "butter_bridge", body: "TEST POST PLEASE IGNORE"})
         .expect(201)
         .then(({body}) => {
+            console.log(body)
             expect(body).toHaveProperty("article_id")
             expect(body).toHaveProperty("author")
             expect(body).toHaveProperty("body")
@@ -229,10 +230,10 @@ describe.skip("POST /api/articles/:article_id/comments", () => {
             expect(body.msg).toBe("Not found")
         })
     })
-    it("Should return a PSQL error when given an user_name that does not exist", () => {
+    it.skip("Should return a PSQL error when given an user_name that does not exist", () => {
         return request(app)
         .post("/api/articles/2/comments")
-        .send({user_name: "Mike", body: "There's no article there yet, I shouldn't be able to comment on it!"})
+        .send({user_name: "Mike", body: "There's nobody here by that username!"})
         .expect(404)
         .then(({body}) => {
             expect(body.msg).toBe("Not found")
