@@ -144,3 +144,12 @@ exports.removeComment = (id) => {
         })
 
 }
+// Ticket 10
+exports.selectUsers = () => {
+    return db.query(`
+    SELECT * FROM users;`)
+    .then(({rows}) => {
+        console.log(rows)
+        return rows
+    })
+}

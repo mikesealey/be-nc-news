@@ -1,4 +1,4 @@
-const { selectAllTopics, selectApiEndPoints, selectArticleById, selectArticles, selectCommentsByArticleId, sendComment, updateVotes, removeComment } = require("../models/api.models")
+const { selectAllTopics, selectApiEndPoints, selectArticleById, selectArticles, selectCommentsByArticleId, sendComment, updateVotes, removeComment, selectUsers } = require("../models/api.models")
 
 
 // Ticket2
@@ -72,6 +72,13 @@ const deleteComment = (req, res, next) => {
     })
     .catch(next)
 }
+// Ticket 10
+const getUsers = (req, res, next) => {
+    selectUsers()
+    .then((rows) => {
+        res.status(200).send(rows)
+    })
+    .catch(next)
+}
 
-
-module.exports = { getTopics, getApiEndpoints, getArticleById, getArticles, getCommentsByArticleId, postComment, patchVotes, deleteComment }
+module.exports = { getTopics, getApiEndpoints, getArticleById, getArticles, getCommentsByArticleId, postComment, patchVotes, deleteComment, getUsers }
