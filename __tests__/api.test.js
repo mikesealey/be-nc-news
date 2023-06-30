@@ -239,3 +239,9 @@ describe.skip("POST /api/articles/:article_id/comments", () => {
         })
     })
 })
+// Ticket 8
+describe.skip("PATCH /api/articles/article_id", () => {
+    it("Should update the votes property of a given article by id", () => {
+
+    })
+})

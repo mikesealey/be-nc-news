@@ -53,7 +53,7 @@ const postComment = (req, res, next) => {
     })
     .catch(next)
 }
-
+// Ticket 8
 
 module.exports = { getTopics, getApiEndpoints, getArticleById, getArticles, getCommentsByArticleId, postComment }
 

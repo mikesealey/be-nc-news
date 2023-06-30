@@ -13,6 +13,7 @@ app.get("/api/articles/:article_id/comments", getCommentsByArticleId) // Ticket6
 
 app.post("/api/articles/:article_id/comments", postComment)// Ticket 7
 
+app.patch("")//Ticket 8
 
 app.use(customErrorHandler)
 app.use(psqlErrorHandler)
