@@ -350,7 +350,6 @@ describe("PATCH /api/articles/article_id", () => {
 describe("DELETE /api/comments/:comment_id", () => {
     it("Should respond with 204 - no content when given a valid comment id to delete", () => {
         return request(app)
-        // comment_1 is "Sultan of Sentiment"
         .delete("/api/comments/1")
         .expect(204)
     })
