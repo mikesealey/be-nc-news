@@ -81,7 +81,7 @@ exports.sendComment = (article_id, commentObject) => {
         return db.query(`
     INSERT INTO comments (body, article_id, author)
     VALUES ($1, $2, $3)
-    RETURNING *;`, [commentObject.body, 2, commentObject.user_name])
+    RETURNING *;`, [commentObject.body, article_id, commentObject.user_name])
     })
     .then(({rows}) => {
         return rows
