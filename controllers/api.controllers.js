@@ -66,4 +66,3 @@ const patchVotes = (req, res, next) => {
 
 
 module.exports = { getTopics, getApiEndpoints, getArticleById, getArticles, getCommentsByArticleId, postComment, patchVotes }
-
