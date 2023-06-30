@@ -346,3 +346,28 @@ describe("PATCH /api/articles/article_id", () => {
         })
     })
 })
+// Ticket 9
+describe("DELETE /api/comments/:comment_id", () => {
+    it("Should respond with 204 - no content when given a valid comment id to delete", () => {
+        return request(app)
+        // comment_1 is "Sultan of Sentiment"
+        .delete("/api/comments/1")
+        .expect(204)
+    })
+    it("Should respond with 404 - Not found when given an id of a comment that doesn't exist", () => {
+        return request(app)
+        .delete("/api/comments/9999")
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe("Not found")
+        })
+    })
+    it("Should respond with a 400 - Bad request when given an invalid comment_id", () => {
+        return request(app)
+        .delete("/api/comments/banana")
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("Bad request")
+        })
+    })
+})
