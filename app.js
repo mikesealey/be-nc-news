@@ -17,7 +17,7 @@ app.patch("/api/articles/:article_id", patchVotes)//Ticket 8
 
 app.delete("/api/comments/:comment_id", deleteComment)//Ticket 9
 
-app.get("/api/users", getUsers)
+app.get("/api/users", getUsers) // Ticket 10
 
 app.use(customErrorHandler)
 app.use(psqlErrorHandler)

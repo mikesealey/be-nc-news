@@ -1,7 +1,7 @@
 const { selectAllTopics, selectApiEndPoints, selectArticleById, selectArticles, selectCommentsByArticleId, sendComment, updateVotes, removeComment, selectUsers } = require("../models/api.models")
 
 
-// Ticket2
+// Ticket2 AND Ticket 11
 const getTopics = (req, res, next) => {
     selectAllTopics(req.query)
     .then((topics) => {

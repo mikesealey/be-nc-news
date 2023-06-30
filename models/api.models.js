@@ -66,8 +66,6 @@ exports.selectCommentsByArticleId = (id) => {
         return rows
     })
 }
-
-// Ticket7
 // Ticket7
 exports.sendComment = (article_id, commentObject) => {
     return this.selectArticleById(article_id)
@@ -149,7 +147,6 @@ exports.selectUsers = () => {
     return db.query(`
     SELECT * FROM users;`)
     .then(({rows}) => {
-        console.log(rows)
         return rows
     })
 }

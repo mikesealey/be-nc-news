@@ -387,3 +387,16 @@ describe("GET /api/users" , ()=> {
         })
     })
 })
+// Ticket 11
+describe.skip("GET /api/articles (queries)", () => {
+    it("Should respond with status200 and an array of articles matching the query topic", () => {
+        return request(app)
+        .get("/api/articles?topic=mitch")
+        .expect(200)
+        .then(({body}) => {
+            console.log(body)
+            expect(body).toHaveLength(12)
+
+        })
+    })
+})
