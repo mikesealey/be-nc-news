@@ -1,4 +1,4 @@
-const { selectAllTopics, selectApiEndPoints, selectArticleById, selectArticles, selectCommentsByArticleId } = require("../models/api.models")
+const { selectAllTopics, selectApiEndPoints, selectArticleById, selectArticles, selectCommentsByArticleId, sendComment } = require("../models/api.models")
 
 
 // Ticket2
@@ -49,7 +49,7 @@ const postComment = (req, res, next) => {
     let commentObject = req.body
     sendComment(articleId, commentObject)
     .then((body) => {
-        res.status(201).send(body)
+        res.status(201).send(body[0])
     })
     .catch(next)
 }

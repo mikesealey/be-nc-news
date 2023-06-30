@@ -196,7 +196,7 @@ describe("GET /api/articles/:article_id/comments", () => {
     })
 })
 // Ticket7
-describe.skip("POST /api/articles/:article_id/comments", () => {
+describe("POST /api/articles/:article_id/comments", () => {
     it("Should post a simple comment to an article that exists", () => {
         return request(app)
         .post("/api/articles/2/comments")
@@ -229,14 +229,50 @@ describe.skip("POST /api/articles/:article_id/comments", () => {
             expect(body.msg).toBe("Not found")
         })
     })
-    it("Should return a PSQL error when given an user_name that does not exist", () => {
+    it("Should return an error when given a comment with empty username field", () => {
         return request(app)
         .post("/api/articles/2/comments")
-        .send({user_name: "Mike", body: "There's no article there yet, I shouldn't be able to comment on it!"})
+        .send({username: "", body: "Can't post this without a username!"})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("Bad request")
+        })
+    })
+    it("Should return an error when given a comment with empty body field", () => {
+        return request(app)
+        .post("/api/articles/2/comments")
+        .send({user_name: "butter_bridge", body: ""})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("Bad request")
+        })
+    })
+    it("Should return an error when given a username that doesn't exist", () => {
+        return request(app)
+        .post("/api/articles/2/comments")
+        .send({user_name: "obviously_invalid_username", body: "invalid usernames can't make comments? Pah!"})
         .expect(404)
         .then(({body}) => {
             expect(body.msg).toBe("Not found")
         })
+    })
+    it("Should ignore additional properties when sent an object with more than just user_name and body", () => {
+        return request(app)
+        .post("/api/articles/2/comments")
+        .send({user_name: "butter_bridge", body: "This is the comment body", additionalProperty: "This is totally unnecessary third KVP that should have no effect on the query at all!"})
+        .expect(201)
+        .then(({body}) => {
+            expect(body).toHaveProperty("article_id")
+            expect(body).toHaveProperty("author")
+            expect(body).toHaveProperty("body")
+            expect(body).toHaveProperty("comment_id")
+            expect(body).toHaveProperty("created_at")
+            expect(body).toHaveProperty("votes")
+            expect(body.author).toBe("butter_bridge")
+            expect(body.body).toBe("This is the comment body")
+            expect(body).not.toHaveProperty("additionalProperty")
+        })
+            
     })
 })
 // Ticket 8
