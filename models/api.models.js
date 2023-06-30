@@ -106,3 +106,27 @@ exports.sendComment = (article_id, commentObject) => {
     })
 }
 // Ticket 8
+exports.updateVotes = (articleId, votesObject) => {
+    return this.selectArticleById(articleId)
+    .then((rows) => {
+        if (rows.length === 0) {
+            return Promise.reject({status: 404, msg: "Not found"})
+        }
+    })
+    .then(() => {
+        if (Number.isNaN(votesObject) || !votesObject) {
+            return Promise.reject({status: 400, msg: "Bad request"})
+        }
+    })
+    .then(() => {
+        return db.query(`
+        UPDATE articles
+        SET votes = votes + $2
+        WHERE article_id = $1
+        RETURNING *;`,
+        [articleId, votesObject])
+    })
+    .then(({rows}) => {
+        return rows
+    })
+}

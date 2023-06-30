@@ -276,8 +276,73 @@ describe("POST /api/articles/:article_id/comments", () => {
     })
 })
 // Ticket 8
-describe.skip("PATCH /api/articles/article_id", () => {
+describe("PATCH /api/articles/article_id", () => {
+    it("Should increase the votes property of a given article by id", () => {
+        return request(app)
+        .patch("/api/articles/1")
+        .send({inc_votes: 1})
+        .expect(200)
+        .then(({body}) => {
+            expect(body).toHaveProperty("article_id")
+            expect(body).toHaveProperty("title")
+            expect(body).toHaveProperty("topic")
+            expect(body).toHaveProperty("author")
+            expect(body).toHaveProperty("body")
+            expect(body).toHaveProperty("created_at")
+            expect(body).toHaveProperty("votes")
+            expect(body.votes).toEqual(101)
+        })
+    })
     it("Should update the votes property of a given article by id", () => {
-
+        return request(app)
+        .patch("/api/articles/1")
+        .send({inc_votes: -1})
+        .expect(200)
+        .then(({body}) => {
+            expect(body).toHaveProperty("article_id")
+            expect(body).toHaveProperty("title")
+            expect(body).toHaveProperty("topic")
+            expect(body).toHaveProperty("author")
+            expect(body).toHaveProperty("body")
+            expect(body).toHaveProperty("created_at")
+            expect(body).toHaveProperty("votes")
+            expect(body.votes).toEqual(99)
+        })
+    })
+    it("Should return 404-not found when article does not yet exist at that id", () => {
+        return request(app)
+        .patch("/api/articles/9999")
+        .send({inc_votes: 1})
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe("Not found")
+        })
+    })
+    it("Should return 400-bad request when given given invalid article_id", () => {
+        return request(app)
+        .patch("/api/articles/banana")
+        .send({inc_votes: 1})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("Bad request")
+        })
+    })
+    it("Should return 400-bad request when request body does not contain votes-key", () => {
+        return request(app)
+        .patch("/api/articles/1")
+        .send({wrongKeyProvided: 1})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("Bad request")
+        })
+    })
+    it("Should return 400-bad request when request body does not contain votes-key", () => {
+        return request(app)
+        .patch("/api/articles/1")
+        .send({inc_votes: "banana"})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("Bad request")
+        })
     })
 })
