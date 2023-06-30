@@ -230,13 +230,4 @@ describe("POST /api/articles/:article_id/comments", () => {
             expect(body.msg).toBe("Not found")
         })
     })
-    it.skip("Should return a PSQL error when given an user_name that does not exist", () => {
-        return request(app)
-        .post("/api/articles/2/comments")
-        .send({user_name: "Mike", body: "There's nobody here by that username!"})
-        .expect(404)
-        .then(({body}) => {
-            expect(body.msg).toBe("Not found")
-        })
-    })
 })

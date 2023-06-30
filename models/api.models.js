@@ -39,7 +39,6 @@ exports.selectArticleById = (id) => {
     return db.query(`SELECT * FROM articles WHERE article_id = $1`, [id])
     .then(({rows}) => {
         if (rows.length === 0) {
-            console.log("Pormise rejected!")
             return Promise.reject({status: 404, msg: "Not found"})
         }
         return rows
@@ -74,9 +73,7 @@ exports.sendComment = (article_id, commentObject) => {
     return this.selectArticleById(article_id)
     // If it doesn't exist, the returned rows will be empty
     .then((rows) => {
-        console.log("rows", rows )
         if (!rows) {
-            console.log("Nah bro!")
             return Promise.reject({status: 404, msg: "Not found"})
         }
     })
@@ -87,8 +84,6 @@ exports.sendComment = (article_id, commentObject) => {
     RETURNING *;`, [commentObject.body, 2, commentObject.user_name])
     })
     .then(({rows}) => {
-        console.log("IGHIPDFUH")
-        console.log(rows)
         return rows
     })
 }
