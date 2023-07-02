@@ -44,20 +44,33 @@ exports.selectArticleById = (id) => {
         return rows
     })
 }
-// Ticket5
-exports.selectArticles = () => {
-    return db.query(`
-    SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.article_id) AS comment_count
-    FROM articles
-    LEFT JOIN comments ON comments.article_id = articles.article_id
-    GROUP BY articles.article_id
-    ORDER BY articles.created_at DESC;`)
-    .then(({rows}) => {
-        if (rows.length === 0) {
-            res.status(404).send({msg: "Not found"})
-        }
-        return rows
-    })
+// Ticket5 & Ticket 11
+exports.selectArticles = (topic = "cats", sort_by = "articles.created_at", order = `DESC`) => {
+
+    const greenlistTopics = ["mitch", "cats"]
+    const greenlistSortBy = ["articles.author", "articles.title", "articles.article_id", "articles.topic", "articles.created_at", "articles.votes" ]
+    const greenlistOrder = ["ASC", "DESC"]
+    
+    console.log(`Topic: ${topic}, sort_by: ${sort_by}, order (asc/desc): ${order}`)
+    if (!greenlistTopics.includes(topic) || !greenlistSortBy.includes(sort_by) || !greenlistOrder.includes(order)) {
+        console.log("Bad input")
+    } else {
+        return db.query(`
+        SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, 
+        COUNT(comments.article_id) AS comment_count 
+        FROM articles 
+        LEFT JOIN comments ON comments.article_id = articles.article_id 
+        GROUP BY articles.article_id 
+        ORDER BY ${sort_by} ${order}
+        ;`) // Need to confirm where to include "WHERE articles.topic = ${topic}"
+        .then(({rows}) => {
+            console.log("rows", rows)
+            if (rows.length === 0) {
+                res.status(404).send({msg: "Not found"})
+            }
+            return rows
+        })
+    }
 }
 // Ticket6
 exports.selectCommentsByArticleId = (id) => {

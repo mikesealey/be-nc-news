@@ -1,7 +1,7 @@
 const { selectAllTopics, selectApiEndPoints, selectArticleById, selectArticles, selectCommentsByArticleId, sendComment, updateVotes, removeComment, selectUsers } = require("../models/api.models")
 
 
-// Ticket2 AND Ticket 11
+// Ticket2
 const getTopics = (req, res, next) => {
     selectAllTopics(req.query)
     .then((topics) => {
@@ -28,8 +28,14 @@ const getArticleById = (req, res, next) => {
 }
 // Ticket5
 const getArticles = (req, res, next) => {
-    selectArticles()
+    //console.log(req.query)
+    const topic = req.query.topic
+    const sort_by = req.query.sort_by
+    const order = req.query.order
+    selectArticles(topic, sort_by, order)
     .then((rows) => {
+        console.log(rows)
+        console.log("Back in the controller!")
         res.status(200).send(rows)
     })
     .catch(next)
@@ -80,5 +86,6 @@ const getUsers = (req, res, next) => {
     })
     .catch(next)
 }
+
 
 module.exports = { getTopics, getApiEndpoints, getArticleById, getArticles, getCommentsByArticleId, postComment, patchVotes, deleteComment, getUsers }

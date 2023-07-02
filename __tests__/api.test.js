@@ -388,15 +388,37 @@ describe("GET /api/users" , ()=> {
     })
 })
 // Ticket 11
-describe.skip("GET /api/articles (queries)", () => {
-    it("Should respond with status200 and an array of articles matching the query topic", () => {
+// Filter by topic
+// When no sort specified, default to date (options should include article_id, title, topic, author, created_at, votes )
+// Order (options acs/desc, default to desc)
+// Current changes in the model cause the original tests to fail
+
+describe("GET /api/articles (queries)", () => {
+    it.skip("Should respond with status200 and an array of articles matching the query topic", () => {
         return request(app)
         .get("/api/articles?topic=mitch")
         .expect(200)
         .then(({body}) => {
-            console.log(body)
+            console.log(body.length)
             expect(body).toHaveLength(12)
-
+        })
+    })
+    it.skip("Should respond with status200 and an array of articles matching the query topic", () => {
+        return request(app)
+        .get("/api/articles?topic=cats")
+        .expect(200)
+        .then(({body}) => {
+            console.log(body.length)
+            expect(body).toHaveLength(12)
+        })
+    })
+    it.skip("Should respond with status200 and an array of articles matching the query topic", () => {
+        return request(app)
+        .get("/api/articles?topic=nonexistantTopic")
+        .expect(200)
+        .then(({body}) => {
+            // Should default to unfiltered and return all articles regardless of topic
+            expect(body).toHaveLength(13)
         })
     })
 })
