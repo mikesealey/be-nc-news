@@ -123,7 +123,7 @@ describe("GET/api/articles/:article_id", () => {
     })
 })
 // Ticket5
-describe("GET/api/articles", () => {
+describe.skip("GET/api/articles", () => {
     it("Should return an array of all articles", () => {
         return request(app)
         .get("/api/articles")

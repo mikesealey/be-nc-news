@@ -45,24 +45,30 @@ exports.selectArticleById = (id) => {
     })
 }
 // Ticket5 & Ticket 11
-exports.selectArticles = (topic = "cats", sort_by = "articles.created_at", order = `DESC`) => {
+exports.selectArticles = (topic = "*", sort_by = "articles.created_at", order = `DESC`) => {
 
-    const greenlistTopics = ["mitch", "cats"]
+    const greenlistTopics = ["mitch", "cats", "*"]
     const greenlistSortBy = ["articles.author", "articles.title", "articles.article_id", "articles.topic", "articles.created_at", "articles.votes" ]
     const greenlistOrder = ["ASC", "DESC"]
     
+    /** Query string will accept $1 placeholder for a WHERE clause, but not on a GROUP BY or ORDER BY clause
+     * Set the WHERE clause as a variable in itself, then when filtering by all (aka not filtering at all) it will not be present (or an empty string)
+     */
+
     console.log(`Topic: ${topic}, sort_by: ${sort_by}, order (asc/desc): ${order}`)
     if (!greenlistTopics.includes(topic) || !greenlistSortBy.includes(sort_by) || !greenlistOrder.includes(order)) {
         console.log("Bad input")
     } else {
+        console.log("Good input, proceeding to query the db")
         return db.query(`
         SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, 
         COUNT(comments.article_id) AS comment_count 
         FROM articles 
         LEFT JOIN comments ON comments.article_id = articles.article_id 
+        WHERE articles.topic = $1
         GROUP BY articles.article_id 
         ORDER BY ${sort_by} ${order}
-        ;`) // Need to confirm where to include "WHERE articles.topic = ${topic}"
+        ;`, [topic]) // Query looks successful, should check how response is processed
         .then(({rows}) => {
             console.log("rows", rows)
             if (rows.length === 0) {
