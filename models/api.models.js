@@ -44,19 +44,44 @@ exports.selectArticleById = (id) => {
         return rows
     })
 }
-// Ticket5
-exports.selectArticles = () => {
+// Ticket5 & Ticket 11
+exports.selectArticles = (topic, sort_by, order) => {
+    const greenlistTopic = ["cats", "mitch"]
+    const greenlistSortBy = ["articles.author", "articles.title", "articles.article_id", "articles.topic", "articles.created_at", "articles.votes", "comment_count" ]
+    const greenlistOrder = ["ASC", "DESC"]
+    
+    if (!greenlistTopic.includes(topic)) {
+        topic = "all"
+    }
+
+    if(!greenlistOrder.includes(order)) {
+        order = "DESC"
+    }
+
+    if (!greenlistSortBy.includes(sort_by)){
+        sort_by = "articles.created_at"
+    }
+
     return db.query(`
-    SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT(comments.article_id) AS comment_count
-    FROM articles
+    SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, 
+    COUNT(comments.article_id) AS comment_count 
+    FROM articles 
     LEFT JOIN comments ON comments.article_id = articles.article_id
-    GROUP BY articles.article_id
-    ORDER BY articles.created_at DESC;`)
+    GROUP BY articles.article_id 
+    ORDER BY ${sort_by} ${order}
+    ;`)
     .then(({rows}) => {
-        if (rows.length === 0) {
-            res.status(404).send({msg: "Not found"})
-        }
-        return rows
+        if (topic === "all") {
+            return rows
+        } else {
+            const newArray = []
+            rows.forEach((row) => {
+                if (row.topic === topic) {
+                    newArray.push(row)
+                }
+            })
+            return newArray
+        }            
     })
 }
 // Ticket6
@@ -66,8 +91,6 @@ exports.selectCommentsByArticleId = (id) => {
         return rows
     })
 }
-
-// Ticket7
 // Ticket7
 exports.sendComment = (article_id, commentObject) => {
     return this.selectArticleById(article_id)
@@ -149,7 +172,6 @@ exports.selectUsers = () => {
     return db.query(`
     SELECT * FROM users;`)
     .then(({rows}) => {
-        console.log(rows)
         return rows
     })
 }

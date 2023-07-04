@@ -8,7 +8,7 @@ app.use(express.json())
 app.get("/api/topics", getTopics) // Ticket2
 app.get("/api", getApiEndpoints) // Ticket3
 app.get("/api/articles/:article_id", getArticleById) // Ticket4
-app.get("/api/articles", getArticles)  // Ticket5
+app.get("/api/articles", getArticles)  // Ticket5 AND Ticket 11
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId) // Ticket6
 
 app.post("/api/articles/:article_id/comments", postComment)// Ticket 7
@@ -17,7 +17,7 @@ app.patch("/api/articles/:article_id", patchVotes)//Ticket 8
 
 app.delete("/api/comments/:comment_id", deleteComment)//Ticket 9
 
-app.get("/api/users", getUsers)
+app.get("/api/users", getUsers) // Ticket 10
 
 app.use(customErrorHandler)
 app.use(psqlErrorHandler)

@@ -15,7 +15,6 @@ const getApiEndpoints = (req, res) => {
     .then((endpoints) => {
         res.status(200).send({endpoints})
     })
-    //.catch(next)
 }
 // Ticket4
 const getArticleById = (req, res, next) => {
@@ -28,7 +27,10 @@ const getArticleById = (req, res, next) => {
 }
 // Ticket5
 const getArticles = (req, res, next) => {
-    selectArticles()
+    const topic = req.query.topic
+    const sort_by = req.query.sort_by
+    const order = req.query.order
+    selectArticles(topic, sort_by, order)
     .then((rows) => {
         res.status(200).send(rows)
     })
@@ -80,5 +82,6 @@ const getUsers = (req, res, next) => {
     })
     .catch(next)
 }
+
 
 module.exports = { getTopics, getApiEndpoints, getArticleById, getArticles, getCommentsByArticleId, postComment, patchVotes, deleteComment, getUsers }
