@@ -123,7 +123,7 @@ describe("GET/api/articles/:article_id", () => {
     })
 })
 // Ticket5
-describe.skip("GET/api/articles", () => {
+describe("GET/api/articles", () => {
     it("Should return an array of all articles", () => {
         return request(app)
         .get("/api/articles")
@@ -388,13 +388,8 @@ describe("GET /api/users" , ()=> {
     })
 })
 // Ticket 11
-// Filter by topic
-// When no sort specified, default to date (options should include article_id, title, topic, author, created_at, votes )
-// Order (options acs/desc, default to desc)
-// Current changes in the model cause the original tests to fail
-
 describe("GET /api/articles (queries)", () => {
-    it.skip("Should respond with status200 and an array of articles matching the query topic", () => {
+    it("Should respond with status200 and an array of articles matching the query topic", () => {
         return request(app)
         .get("/api/articles?topic=mitch")
         .expect(200)
@@ -403,22 +398,48 @@ describe("GET /api/articles (queries)", () => {
             expect(body).toHaveLength(12)
         })
     })
-    it.skip("Should respond with status200 and an array of articles matching the query topic", () => {
+    it("Should respond with status200 and an array of articles matching the query topic", () => {
         return request(app)
         .get("/api/articles?topic=cats")
         .expect(200)
         .then(({body}) => {
             console.log(body.length)
-            expect(body).toHaveLength(12)
+            expect(body).toHaveLength(1)
         })
     })
-    it.skip("Should respond with status200 and an array of articles matching the query topic", () => {
+    it("Should respond with status200 and an array of articles matching the query topic", () => {
         return request(app)
         .get("/api/articles?topic=nonexistantTopic")
         .expect(200)
         .then(({body}) => {
-            // Should default to unfiltered and return all articles regardless of topic
             expect(body).toHaveLength(13)
+        })
+    })
+    it("Should respond with status200 and an array of articles filtered by topic-mitch, sorted by comment_count-ascending", () => {
+        return request(app)
+        .get("/api/articles?topic=mitch&sort_by=comment_count&order=ASC")
+        .expect(200)
+        .then(({body}) => {
+            expect(body).toHaveLength(12)
+            expect(body).toBeSortedBy(Number("comment_count"), {ascending: true})
+        })
+    })
+    it("Should respond with a status200 and an array of 1 article when given a topic-cats and sorted_by articles.author-ASC", () => {
+        return request(app)
+        .get("/api/articles?topic=cats&sort_by=articles.author&order=ASC")
+        .expect(200)
+        .then(({body}) => {
+            expect(body).toHaveLength(1)
+            expect(body).toBeSortedBy("articles.author", {ascending: true})
+        })
+    })
+    it("Should respond with status200 and an array of all 13 articles ordered by created at descending, when given invalid params", () => {
+        return request(app)
+        .get("/api/articles?topic=NOTATOPIC&sort_by=NOTACOLUMN&order=NOTANORDER")
+        .expect(200)
+        .then(({body}) => {
+            expect(body).toHaveLength(13)
+            expect(body).toBeSortedBy("created_at", {descending: true})
         })
     })
 })

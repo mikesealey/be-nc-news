@@ -45,38 +45,44 @@ exports.selectArticleById = (id) => {
     })
 }
 // Ticket5 & Ticket 11
-exports.selectArticles = (topic = "*", sort_by = "articles.created_at", order = `DESC`) => {
-
-    const greenlistTopics = ["mitch", "cats", "*"]
-    const greenlistSortBy = ["articles.author", "articles.title", "articles.article_id", "articles.topic", "articles.created_at", "articles.votes" ]
+exports.selectArticles = (topic, sort_by, order) => {
+    const greenlistTopic = ["cats", "mitch"]
+    const greenlistSortBy = ["articles.author", "articles.title", "articles.article_id", "articles.topic", "articles.created_at", "articles.votes", "comment_count" ]
     const greenlistOrder = ["ASC", "DESC"]
     
-    /** Query string will accept $1 placeholder for a WHERE clause, but not on a GROUP BY or ORDER BY clause
-     * Set the WHERE clause as a variable in itself, then when filtering by all (aka not filtering at all) it will not be present (or an empty string)
-     */
-
-    console.log(`Topic: ${topic}, sort_by: ${sort_by}, order (asc/desc): ${order}`)
-    if (!greenlistTopics.includes(topic) || !greenlistSortBy.includes(sort_by) || !greenlistOrder.includes(order)) {
-        console.log("Bad input")
-    } else {
-        console.log("Good input, proceeding to query the db")
-        return db.query(`
-        SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, 
-        COUNT(comments.article_id) AS comment_count 
-        FROM articles 
-        LEFT JOIN comments ON comments.article_id = articles.article_id 
-        WHERE articles.topic = $1
-        GROUP BY articles.article_id 
-        ORDER BY ${sort_by} ${order}
-        ;`, [topic]) // Query looks successful, should check how response is processed
-        .then(({rows}) => {
-            console.log("rows", rows)
-            if (rows.length === 0) {
-                res.status(404).send({msg: "Not found"})
-            }
-            return rows
-        })
+    if (!greenlistTopic.includes(topic)) {
+        topic = "all"
     }
+
+    if(!greenlistOrder.includes(order)) {
+        order = "DESC"
+    }
+
+    if (!greenlistSortBy.includes(sort_by)){
+        sort_by = "articles.created_at"
+    }
+
+    return db.query(`
+    SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, 
+    COUNT(comments.article_id) AS comment_count 
+    FROM articles 
+    LEFT JOIN comments ON comments.article_id = articles.article_id
+    GROUP BY articles.article_id 
+    ORDER BY ${sort_by} ${order}
+    ;`)
+    .then(({rows}) => {
+        if (topic === "all") {
+            return rows
+        } else {
+            const newArray = []
+            rows.forEach((row) => {
+                if (row.topic === topic) {
+                    newArray.push(row)
+                }
+            })
+            return newArray
+        }            
+    })
 }
 // Ticket6
 exports.selectCommentsByArticleId = (id) => {
