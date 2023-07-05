@@ -15,8 +15,8 @@ afterAll(() => {
     return db.end()
 })
 
-// Ticket2
-describe('GET/api/topics', () => {
+// Ticket 2
+describe('Ticket 2 - GET/api/topics', () => {
     it("Should respond with an array of topic objects containing the following properties -slug -description ", () => {
         return request(app)
         .get("/api/topics")
@@ -40,7 +40,7 @@ describe('GET/api/topics', () => {
     })
 })
 // Ticket3
-describe('GET/api/', () => {
+describe('Ticket 3 - GET/api/', () => {
     it("Should respond with status-200 and an object", () => {
         return request(app)
         .get("/api/")
@@ -65,8 +65,8 @@ describe('GET/api/', () => {
         } )
     })
 })
-// Ticket4
-describe("GET/api/articles/:article_id", () => {
+// Ticket 4
+describe("Ticket 4 - GET/api/articles/:article_id", () => {
     it("Should return an object of one article", () => {
         return request(app)
         .get("/api/articles/1")
@@ -123,7 +123,7 @@ describe("GET/api/articles/:article_id", () => {
     })
 })
 // Ticket5
-describe("GET/api/articles", () => {
+describe("Ticket 5 - GET/api/articles", () => {
     it("Should return an array of all articles", () => {
         return request(app)
         .get("/api/articles")
@@ -153,8 +153,8 @@ describe("GET/api/articles", () => {
         
     })
 })
-// Ticket6
-describe("GET /api/articles/:article_id/comments", () => {
+// Ticket 6
+describe("Ticket 6 - GET /api/articles/:article_id/comments", () => {
     it("Should return an array of comments for the given article", () => {
         return request(app)
         .get("/api/articles/1/comments")
@@ -196,8 +196,8 @@ describe("GET /api/articles/:article_id/comments", () => {
         })
     })
 })
-// Ticket7
-describe("POST /api/articles/:article_id/comments", () => {
+// Ticket 7
+describe("Ticket 7 - POST /api/articles/:article_id/comments", () => {
     it("Should post a simple comment to an article that exists", () => {
         return request(app)
         .post("/api/articles/2/comments")
@@ -277,7 +277,7 @@ describe("POST /api/articles/:article_id/comments", () => {
     })
 })
 // Ticket 8
-describe("PATCH /api/articles/article_id", () => {
+describe("Ticket 8 - PATCH /api/articles/article_id", () => {
     it("Should increase the votes property of a given article by id", () => {
         return request(app)
         .patch("/api/articles/1")
@@ -348,7 +348,7 @@ describe("PATCH /api/articles/article_id", () => {
     })
 })
 // Ticket 9
-describe("DELETE /api/comments/:comment_id", () => {
+describe("Ticket 9 - DELETE /api/comments/:comment_id", () => {
     it("Should respond with 204 - no content when given a valid comment id to delete", () => {
         return request(app)
         .delete("/api/comments/1")
@@ -372,7 +372,7 @@ describe("DELETE /api/comments/:comment_id", () => {
     })
 })
 // Ticket 10
-describe("GET /api/users" , ()=> {
+describe("Ticket 10 - GET /api/users" , ()=> {
     it("Should respond with an array of all users", () => {
         return request(app)
         .get("/api/users")
@@ -388,13 +388,12 @@ describe("GET /api/users" , ()=> {
     })
 })
 // Ticket 11
-describe("GET /api/articles (queries)", () => {
+describe("Ticket 11 - GET /api/articles (queries)", () => {
     it("Should respond with status200 and an array of articles matching the query topic", () => {
         return request(app)
         .get("/api/articles?topic=mitch")
         .expect(200)
         .then(({body}) => {
-            console.log(body.length)
             expect(body).toHaveLength(12)
         })
     })
@@ -403,7 +402,6 @@ describe("GET /api/articles (queries)", () => {
         .get("/api/articles?topic=cats")
         .expect(200)
         .then(({body}) => {
-            console.log(body.length)
             expect(body).toHaveLength(1)
         })
     })
@@ -440,6 +438,41 @@ describe("GET /api/articles (queries)", () => {
         .then(({body}) => {
             expect(body).toHaveLength(13)
             expect(body).toBeSortedBy("created_at", {descending: true})
+        })
+    })
+})
+//Ticket 12
+describe("Ticket 12 - GET/api/articles/:article_id", () => {
+    it.only("Should return an object of one article now including comment_count property", () => {
+        return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then(({body}) => {
+            expect(body.article_id).toBe(1)
+            expect(body).toHaveProperty("author")
+            expect(body).toHaveProperty("title")
+            expect(body).toHaveProperty("body")
+            expect(body).toHaveProperty("topic")
+            expect(body).toHaveProperty("created_at")
+            expect(body).toHaveProperty("votes")
+            expect(body).toHaveProperty("article_img_url")
+            expect(body).toHaveProperty("comment_count")
+        })
+    })
+    it.only("Should return an object of one article now including comment_count property", () => {
+        return request(app)
+        .get("/api/articles/2")
+        .expect(200)
+        .then(({body}) => {
+            expect(body.article_id).toBe(2)
+            expect(body).toHaveProperty("author")
+            expect(body).toHaveProperty("title")
+            expect(body).toHaveProperty("body")
+            expect(body).toHaveProperty("topic")
+            expect(body).toHaveProperty("created_at")
+            expect(body).toHaveProperty("votes")
+            expect(body).toHaveProperty("article_img_url")
+            expect(body).toHaveProperty("comment_count")
         })
     })
 })
