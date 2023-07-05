@@ -34,7 +34,7 @@ exports.selectApiEndPoints = () => {
         return apiEndpoints
     })
 }
-// Ticket4
+// Ticket4 & Ticket 12
 exports.selectArticleById = (id) => {
     return db.query(`SELECT * FROM articles WHERE article_id = $1`, [id])
     .then(({rows}) => {
@@ -66,8 +66,6 @@ exports.selectCommentsByArticleId = (id) => {
         return rows
     })
 }
-
-// Ticket7
 // Ticket7
 exports.sendComment = (article_id, commentObject) => {
     return this.selectArticleById(article_id)

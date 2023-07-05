@@ -4,9 +4,6 @@ const db = require("../db/connection")
 const seed = require('../db/seeds/seed')
 const testData = require('../db/data/test-data')
 
-
-
-
 beforeEach(() => {
     return seed(testData)
 })
@@ -384,6 +381,25 @@ describe("GET /api/users" , ()=> {
                 expect(user).toHaveProperty("name")
                 expect(user).toHaveProperty("avatar_url")
             })
+        })
+    })
+})
+// Ticket 12 
+describe("GET/api/articles/:article_id", () => {
+    it("Should return an object of one article, which also now includes comment-count ", () => {
+        return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then(({body}) => {
+            expect(body.article_id).toBe(1)
+            expect(body).toHaveProperty("author")
+            expect(body).toHaveProperty("title")
+            expect(body).toHaveProperty("body")
+            expect(body).toHaveProperty("topic")
+            expect(body).toHaveProperty("created_at")
+            expect(body).toHaveProperty("votes")
+            expect(body).toHaveProperty("article_img_url")
+            expect(body).toHaveProperty("comment_count")
         })
     })
 })
