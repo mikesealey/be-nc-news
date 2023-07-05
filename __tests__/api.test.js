@@ -394,7 +394,6 @@ describe("GET /api/articles (queries)", () => {
         .get("/api/articles?topic=mitch")
         .expect(200)
         .then(({body}) => {
-            console.log(body.length)
             expect(body).toHaveLength(12)
         })
     })
@@ -403,7 +402,6 @@ describe("GET /api/articles (queries)", () => {
         .get("/api/articles?topic=cats")
         .expect(200)
         .then(({body}) => {
-            console.log(body.length)
             expect(body).toHaveLength(1)
         })
     })
