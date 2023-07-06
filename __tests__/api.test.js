@@ -443,7 +443,7 @@ describe("Ticket 11 - GET /api/articles (queries)", () => {
 })
 //Ticket 12
 describe("Ticket 12 - GET/api/articles/:article_id", () => {
-    it.only("Should return an object of one article now including comment_count property", () => {
+    it("Should return an object of one article now including comment_count property", () => {
         return request(app)
         .get("/api/articles/1")
         .expect(200)
@@ -459,7 +459,7 @@ describe("Ticket 12 - GET/api/articles/:article_id", () => {
             expect(body).toHaveProperty("comment_count")
         })
     })
-    it.only("Should return an object of one article now including comment_count property", () => {
+    it("Should return an object of one article now including comment_count property", () => {
         return request(app)
         .get("/api/articles/2")
         .expect(200)
@@ -473,6 +473,23 @@ describe("Ticket 12 - GET/api/articles/:article_id", () => {
             expect(body).toHaveProperty("votes")
             expect(body).toHaveProperty("article_img_url")
             expect(body).toHaveProperty("comment_count")
+        })
+    })
+    // Need to test for sadpath
+    it("Should return 400-Bad request when given an invalid query", () => {
+        return request(app)
+        .get("/api/articles/banana")
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("Bad request")
+        })
+    })
+    it("Should return 404-Not found when querying an article that doesn't yet exist", () => {
+        return request(app)
+        .get("/api/articles/9999")
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe("Not found")
         })
     })
 })

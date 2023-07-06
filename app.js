@@ -19,8 +19,8 @@ app.delete("/api/comments/:comment_id", deleteComment)//Ticket 9
 
 app.get("/api/users", getUsers) // Ticket 10
 
-app.use(customErrorHandler)
 app.use(psqlErrorHandler)
+app.use(customErrorHandler)
 
 // Catch-all error handling - Must occur last
 app.all("/*", function (req, res, next) { 

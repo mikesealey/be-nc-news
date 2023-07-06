@@ -36,19 +36,15 @@ exports.selectApiEndPoints = () => {
 }
 // Ticket4 & Ticket 12
 exports.selectArticleById = (id) => {    
-    
-    /** DESPERATELY NEED TO SANITIZE THIS INPUT! */
-
     return db.query(`
     SELECT articles.article_id, articles.author, articles.title, articles.body, articles.topic, articles.created_at, articles.votes, articles.article_img_url,
     COUNT(comments.comment_id) AS comment_count
     FROM articles
     LEFT JOIN comments ON articles.article_id = comments.article_id
-    WHERE articles.article_id = ${id}
+    WHERE articles.article_id = $1
     GROUP BY articles.article_id
-    ;`)
+    ;`, [id])
     .then(({rows}) => {
-        console.log(rows)
         if (rows.length === 0) {
             return Promise.reject({status: 404, msg: "Not found"})
         }
