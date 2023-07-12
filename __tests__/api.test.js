@@ -4,9 +4,6 @@ const db = require("../db/connection")
 const seed = require('../db/seeds/seed')
 const testData = require('../db/data/test-data')
 
-
-
-
 beforeEach(() => {
     return seed(testData)
 })
@@ -493,3 +490,127 @@ describe("Ticket 12 - GET/api/articles/:article_id", () => {
         })
     })
 })
+// Ticket 16
+describe("Ticket 16 - GET/api/users/:username", () => {
+    it("Should return an object of one user according to the username", () => {
+        return request(app)
+        .get("/api/users/butter_bridge")
+        .expect(200)
+        .then(({body}) => {
+            expect(body).toHaveProperty("username")
+            expect(body).toHaveProperty("avatar_url")
+            expect(body).toHaveProperty("name")
+        })
+    })
+    it("Should return 404-not found when given a valid-but-non-existant username", () => {
+        return request(app)
+        .get("/api/users/valid_but_non_existant_username")
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe("Not found")
+        })
+    })
+    // Is there a 400 - Bad Request sad-path case here?
+    // I don't know what specifics were set out - allowable/forbidden characters in username fields
+})
+// Ticket 17
+describe("Ticket 17 - PATCH/api/comments/:comment_id", () => {
+    it("Should return a single comment with a votes count increased by 1", () => {
+        return request(app)
+        .patch("/api/comments/1")
+        .send({inc_votes: 1})
+        .expect(200)
+        .then(({body}) => {
+            expect(body).toHaveProperty("article_id")
+            expect(body).toHaveProperty("author")
+            expect(body).toHaveProperty("body")
+            expect(body).toHaveProperty("comment_id")
+            expect(body).toHaveProperty("created_at")
+            expect(body).toHaveProperty("votes")
+            expect(body.votes).toBe(17)
+        })
+    })
+    it("Should return a single comment with a votes count decreased by 1", () => {
+        return request(app)
+        .patch("/api/comments/1")
+        .send({inc_votes: -1})
+        .expect(200)
+        .then(({body}) => {
+            expect(body).toHaveProperty("article_id")
+            expect(body).toHaveProperty("author")
+            expect(body).toHaveProperty("body")
+            expect(body).toHaveProperty("comment_id")
+            expect(body).toHaveProperty("created_at")
+            expect(body).toHaveProperty("votes")
+            expect(body.votes).toBe(15)
+        })
+    })
+    it("Should return a single comment with a votes count increased by 100", () => {
+        return request(app)
+        .patch("/api/comments/1")
+        .send({inc_votes: 100})
+        .expect(200)
+        .then(({body}) => {
+            expect(body).toHaveProperty("article_id")
+            expect(body).toHaveProperty("author")
+            expect(body).toHaveProperty("body")
+            expect(body).toHaveProperty("comment_id")
+            expect(body).toHaveProperty("created_at")
+            expect(body).toHaveProperty("votes")
+            expect(body.votes).toBe(116)
+        })
+    })
+    it("Should return 404 - Not found when given a valid-but-non-existant comment_id", () => {
+        return request(app)
+        .patch("/api/comments/9999")
+        .send({inc_votes: 100})
+        .expect(404)
+        .then(({body}) => {
+            expect(body.msg).toBe("Not found")
+
+        })
+    })
+    it("Should return 400 - Bad request when given an invalid comment_id", () => {
+        return request(app)
+        .patch("/api/comments/banana")
+        .send({inc_votes: 100})
+        .expect(400)
+        .then(({body}) => {
+            expect(body.msg).toBe("Bad request")
+
+        })
+    })
+})
+// Ticket 18
+describe("Ticket 18 - POST/api/articles", () => {
+    it("Should respond with the newly created article", () => {
+        return request(app)
+        .post("/api/articles")
+        .send({
+            author: "butter_bridge",
+            title: "Test Article Title",
+            body: "Test Article Body",
+            topic: "cats", // Test to see if more topics are allowed
+            article_img_url: "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+        })
+        .expect(200)
+        .then(({body}) => {
+            expect(body).toHaveProperty("author")
+            expect(body).toHaveProperty("title")
+            expect(body).toHaveProperty("body")
+            expect(body).toHaveProperty("topic")
+            expect(body).toHaveProperty("article_img_url")
+            expect(body).toHaveProperty("article_id")
+            expect(body).toHaveProperty("votes")
+            expect(body).toHaveProperty("created_at")
+            //expect(body).toHaveProperty("comment_count")
+
+            // Signing off 2130 12/7 
+            // This article response must have a comment count,
+            // which means querying the comments table and summing however many 
+            // Have the same article_id as this article, which is none, 
+            // Because I've only just posted it.
+        })
+    })
+})
+

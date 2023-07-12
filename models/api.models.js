@@ -182,3 +182,50 @@ exports.selectUsers = () => {
         return rows
     })
 }
+// Ticket 16
+exports.selectUser = (username) => {
+    return db.query(`
+    SELECT * FROM users
+    WHERE username = $1`, [username])
+    .then(({rows}) => {
+        if (rows.length === 0) {
+            return Promise.reject({status: 404, msg: "Not found"})
+        }
+        return rows[0]
+    })
+}
+// Ticket 17 
+exports.updateCommentVotes = (commentId, vote) => {
+    return db.query(`
+    UPDATE comments
+    SET votes = votes + $2
+    WHERE comment_id = $1
+    RETURNING *;
+    `, [commentId, vote])
+    .then(({rows}) => {
+        if (rows.length === 0) {
+            return Promise.reject({status: 404, msg: "Not found"})
+        }
+        return rows[0]
+    })
+}
+// Ticket 18
+exports.sendArticle = (article) => {
+    console.log(article)
+    return db.query(`
+    INSERT INTO articles (author, title, body, topic, article_img_url)
+    values ($1, $2, $3, $4, $5)
+    RETURNING *;
+    `, [
+        article.author,
+        article.title,
+        article.body,
+        article.topic,
+        article.article_img_url
+    ])
+    .then(({rows}) => {
+        console.log(rows)
+        return rows[0]
+    })
+    
+}

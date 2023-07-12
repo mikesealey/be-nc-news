@@ -1,4 +1,4 @@
-const { selectAllTopics, selectApiEndPoints, selectArticleById, selectArticles, selectCommentsByArticleId, sendComment, updateVotes, removeComment, selectUsers } = require("../models/api.models")
+const { selectAllTopics, selectApiEndPoints, selectArticleById, selectArticles, selectCommentsByArticleId, sendComment, updateVotes, removeComment, selectUsers, selectUser, updateCommentVotes, sendArticle } = require("../models/api.models")
 
 
 // Ticket 2
@@ -82,6 +82,33 @@ const getUsers = (req, res, next) => {
     })
     .catch(next)
 }
+// Ticket 16
+const getUser = (req, res, next) => {
+    const username = req.params.username
+    selectUser(username)
+    .then((rows) => {
+        res.status(200).send(rows)
+    })
+    .catch(next)
+}
+// Ticket 17
+const patchCommentVotes = (req, res, next) => {
+    const commentId = req.params.comment_id
+    const vote = req.body.inc_votes
+    updateCommentVotes(commentId, vote)
+    .then((rows) =>{
+        res.status(200).send(rows)
+    })
+    .catch(next)
+}
+// Ticket 18
+const postArticle = (req, res, next) => {
+    const article = req.body
+    sendArticle(article)
+    .then((rows) => {
+        res.status(200).send(rows)
+    })
+    .catch(next)
+}
 
-
-module.exports = { getTopics, getApiEndpoints, getArticleById, getArticles, getCommentsByArticleId, postComment, patchVotes, deleteComment, getUsers }
+module.exports = { getTopics, getApiEndpoints, getArticleById, getArticles, getCommentsByArticleId, postComment, patchVotes, deleteComment, getUsers, getUser, patchCommentVotes, postArticle }
