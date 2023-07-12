@@ -1,7 +1,7 @@
 const { selectAllTopics, selectApiEndPoints, selectArticleById, selectArticles, selectCommentsByArticleId, sendComment, updateVotes, removeComment, selectUsers } = require("../models/api.models")
 
 
-// Ticket2
+// Ticket 2
 const getTopics = (req, res, next) => {
     selectAllTopics(req.query)
     .then((topics) => {
@@ -9,14 +9,14 @@ const getTopics = (req, res, next) => {
     })
     .catch(next)
 }
-// Ticket3
+// Ticket 3
 const getApiEndpoints = (req, res) => {
     selectApiEndPoints()
     .then((endpoints) => {
         res.status(200).send({endpoints})
     })
 }
-// Ticket4
+// Ticket 4 & Ticket 12
 const getArticleById = (req, res, next) => {
     let id = req.params.article_id
     selectArticleById(id)
@@ -25,7 +25,7 @@ const getArticleById = (req, res, next) => {
         })
     .catch(next)
 }
-// Ticket5
+// Ticket 5 & Ticket 11
 const getArticles = (req, res, next) => {
     const topic = req.query.topic
     const sort_by = req.query.sort_by
@@ -36,7 +36,7 @@ const getArticles = (req, res, next) => {
     })
     .catch(next)
 }
-// Ticket6
+// Ticket 6
 const getCommentsByArticleId = (req, res, next) => {
     let id = req.params.article_id
     selectCommentsByArticleId(id)
@@ -45,7 +45,7 @@ const getCommentsByArticleId = (req, res, next) => {
     })
     .catch(next)
 }
-// Ticket7
+// Ticket 7
 const postComment = (req, res, next) => {
     let articleId = req.params.article_id
     let commentObject = req.body

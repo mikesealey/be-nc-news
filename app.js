@@ -7,7 +7,7 @@ app.use(express.json())
 
 app.get("/api/topics", getTopics) // Ticket2
 app.get("/api", getApiEndpoints) // Ticket3
-app.get("/api/articles/:article_id", getArticleById) // Ticket4
+app.get("/api/articles/:article_id", getArticleById) // Ticket4 AND Ticket 12
 app.get("/api/articles", getArticles)  // Ticket5 AND Ticket 11
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId) // Ticket6
 
