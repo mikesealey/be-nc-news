@@ -1,8 +1,12 @@
 const express = require('express')
 const { getTopics, getApiEndpoints, getArticleById, getArticles, getCommentsByArticleId, postComment, patchVotes, deleteComment, getUsers, getUser, patchCommentVotes, postArticle } = require("./controllers/api.controllers")
 const { psqlErrorHandler, customErrorHandler } = require("./errors")
+const cors = require("cors")
 
 const app = express()
+
+app.use(cors())
+
 app.use(express.json())
 
 app.get("/api/topics", getTopics) // Ticket2
