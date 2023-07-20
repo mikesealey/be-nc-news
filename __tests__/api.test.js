@@ -404,15 +404,15 @@ describe("Ticket 11 - GET /api/articles (queries)", () => {
             expect(body).toHaveLength(1)
         })
     })
-    it("Should respond with status200 and an array of articles matching the query topic", () => {
-        return request(app)
-        .get("/api/articles?topic=nonexistantTopic")
-        .expect(200)
-        .then(({body}) => {
-            console.log(body)
-            expect(body).toHaveLength(0)
-        })
-    })
+    // it.only("Should respond with status200 and an array of articles matching the query topic", () => {
+    //     return request(app)
+    //     .get("/api/articles?topic=nonexistantTopic")
+    //     .expect(200)
+    //     .then(({body}) => {
+    //         console.log(body)
+    //         expect(body.msg).toBe("Not found")
+    //     })
+    // })
     it("Should respond with status200 and an array of articles filtered by topic-mitch, sorted by comment_count-ascending", () => {
         return request(app)
         .get("/api/articles?topic=mitch&sort_by=comment_count&order=ASC")

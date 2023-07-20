@@ -54,14 +54,8 @@ exports.selectArticleById = (id) => {
 }
 // Ticket5 & Ticket 11
 exports.selectArticles = (topic, sort_by, order) => {
-    console.log("In the model")
-    // const greenlistTopic = ["cats", "mitch"]
     const greenlistSortBy = ["articles.author", "articles.title", "articles.article_id", "articles.topic", "articles.created_at", "articles.votes", "comment_count" ]
     const greenlistOrder = ["ASC", "DESC"]
-    
-    // if (!greenlistTopic.includes(topic)) {
-    //     topic = "all"
-    // }
 
     if(!greenlistOrder.includes(order)) {
         order = "DESC"
@@ -83,20 +77,12 @@ exports.selectArticles = (topic, sort_by, order) => {
 
     return db.query(queryString, valueArray)
     .then(({rows}) => {
+        if (rows.length === 0) {
+            Promise.reject({status: 404, msg: "Not found"})
+        }
         return rows
     })
 
-    // return db.query(`
-    // SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, 
-    // COUNT(comments.article_id) AS comment_count 
-    // FROM articles 
-    // LEFT JOIN comments ON comments.article_id = articles.article_id
-    // GROUP BY articles.article_id 
-    // ORDER BY ${sort_by} ${order}
-    // ;`, [])
-    // .then(({rows}) => {
-    //     return rows      
-    // })
 }
 // Ticket6
 exports.selectCommentsByArticleId = (id) => {
