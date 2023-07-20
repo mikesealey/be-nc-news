@@ -53,7 +53,7 @@ exports.selectArticleById = (id) => {
 }
 // Ticket5 & Ticket 11
 exports.selectArticles = (topic, sort_by, order) => {
-    const greenlistTopic = ["cats", "mitch"]
+    const greenlistTopic = ["cats", "mitch", "football"]
     const greenlistSortBy = ["articles.author", "articles.title", "articles.article_id", "articles.topic", "articles.created_at", "articles.votes", "comment_count" ]
     const greenlistOrder = ["ASC", "DESC"]
     
