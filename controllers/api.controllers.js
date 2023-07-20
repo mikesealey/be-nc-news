@@ -28,13 +28,18 @@ const getArticleById = (req, res, next) => {
 // Ticket 5 & Ticket 11
 const getArticles = (req, res, next) => {
     const topic = req.query.topic
+    console.log("TOPIC IS: ", topic)
     const sort_by = req.query.sort_by
     const order = req.query.order
     selectArticles(topic, sort_by, order)
     .then((rows) => {
         res.status(200).send(rows)
+
     })
-    .catch(next)
+    .catch((err) => {
+        console.log(err)
+        console.log("In the catch block")
+    })
 }
 // Ticket 6
 const getCommentsByArticleId = (req, res, next) => {

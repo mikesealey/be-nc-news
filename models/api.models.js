@@ -1,6 +1,7 @@
 const { type } = require("os")
 const db = require("../db/connection")
 const fs = require("fs/promises")
+const pg = require("pg-format")
 
 // Ticket2
 exports.selectAllTopics = () => {
@@ -53,13 +54,14 @@ exports.selectArticleById = (id) => {
 }
 // Ticket5 & Ticket 11
 exports.selectArticles = (topic, sort_by, order) => {
-    const greenlistTopic = ["cats", "mitch", "football"]
+    console.log("In the model")
+    // const greenlistTopic = ["cats", "mitch"]
     const greenlistSortBy = ["articles.author", "articles.title", "articles.article_id", "articles.topic", "articles.created_at", "articles.votes", "comment_count" ]
     const greenlistOrder = ["ASC", "DESC"]
     
-    if (!greenlistTopic.includes(topic)) {
-        topic = "all"
-    }
+    // if (!greenlistTopic.includes(topic)) {
+    //     topic = "all"
+    // }
 
     if(!greenlistOrder.includes(order)) {
         order = "DESC"
@@ -69,27 +71,32 @@ exports.selectArticles = (topic, sort_by, order) => {
         sort_by = "articles.created_at"
     }
 
-    return db.query(`
-    SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, 
-    COUNT(comments.article_id) AS comment_count 
-    FROM articles 
-    LEFT JOIN comments ON comments.article_id = articles.article_id
-    GROUP BY articles.article_id 
-    ORDER BY ${sort_by} ${order}
-    ;`)
+    let queryString = `SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, COUNT (comments.article_id) AS comment_count FROM articles LEFT JOIN comments ON comments.article_id = articles.article_id `
+    const valueArray = []
+    if (topic) {
+        queryString += `WHERE articles.topic = $1 `
+        valueArray.push(topic)
+    }
+    queryString += `GROUP BY articles.article_id ORDER BY ${sort_by} ${order};`
+
+    console.log(queryString)
+
+    return db.query(queryString, valueArray)
     .then(({rows}) => {
-        if (topic === "all") {
-            return rows
-        } else {
-            const newArray = []
-            rows.forEach((row) => {
-                if (row.topic === topic) {
-                    newArray.push(row)
-                }
-            })
-            return newArray
-        }            
+        return rows
     })
+
+    // return db.query(`
+    // SELECT articles.author, articles.title, articles.article_id, articles.topic, articles.created_at, articles.votes, articles.article_img_url, 
+    // COUNT(comments.article_id) AS comment_count 
+    // FROM articles 
+    // LEFT JOIN comments ON comments.article_id = articles.article_id
+    // GROUP BY articles.article_id 
+    // ORDER BY ${sort_by} ${order}
+    // ;`, [])
+    // .then(({rows}) => {
+    //     return rows      
+    // })
 }
 // Ticket6
 exports.selectCommentsByArticleId = (id) => {

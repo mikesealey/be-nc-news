@@ -126,6 +126,7 @@ describe("Ticket 5 - GET/api/articles", () => {
         .get("/api/articles")
         .expect(200)
         .then(({body}) => {
+            console.log(body)
             expect(body).toHaveLength(13)
             body.forEach(element => {
                 expect(element).toHaveProperty("author")
@@ -391,6 +392,7 @@ describe("Ticket 11 - GET /api/articles (queries)", () => {
         .get("/api/articles?topic=mitch")
         .expect(200)
         .then(({body}) => {
+            console.log(body)
             expect(body).toHaveLength(12)
         })
     })
@@ -407,7 +409,8 @@ describe("Ticket 11 - GET /api/articles (queries)", () => {
         .get("/api/articles?topic=nonexistantTopic")
         .expect(200)
         .then(({body}) => {
-            expect(body).toHaveLength(13)
+            console.log(body)
+            expect(body).toHaveLength(0)
         })
     })
     it("Should respond with status200 and an array of articles filtered by topic-mitch, sorted by comment_count-ascending", () => {
@@ -426,15 +429,6 @@ describe("Ticket 11 - GET /api/articles (queries)", () => {
         .then(({body}) => {
             expect(body).toHaveLength(1)
             expect(body).toBeSortedBy("articles.author", {ascending: true})
-        })
-    })
-    it("Should respond with status200 and an array of all 13 articles ordered by created at descending, when given invalid params", () => {
-        return request(app)
-        .get("/api/articles?topic=NOTATOPIC&sort_by=NOTACOLUMN&order=NOTANORDER")
-        .expect(200)
-        .then(({body}) => {
-            expect(body).toHaveLength(13)
-            expect(body).toBeSortedBy("created_at", {descending: true})
         })
     })
 })
